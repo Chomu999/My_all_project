@@ -5,7 +5,7 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 <meta name="author" content="billbyte"/>
-<title>webgl app testing 2 recoding</title>
+<title>Ray Marching Testing </title>
 
 <style>
 
@@ -104,7 +104,7 @@ display: none;
 
 </style>
 
-<script src="/storage/emulated/0/g_js_libs/CCapture.all.min.js"></script>
+<!-- <script src="/storage/emulated/0/g_js_libs/CCapture.all.min.js"></script> -->
 <script src="/storage/emulated/0/g_js_libs/gl-matrix.js"></script>
 
 </head>
@@ -116,11 +116,6 @@ display: none;
 
 
 
-<div class="control_box">
-
-<button id="btn_start_recoding"> start</button>
-<button id="btn_end_recoding"> end</button>
-</div>
 
 <div class="error_box">
 <span class="title">error and warning</span>
@@ -156,13 +151,12 @@ for (let i in gl) if (gl[i] == ii) showError(i)
 }
 
 
+
 const canvas=document.querySelector("canvas");
 
 const gl=canvas.getContext("webgl2");
 
-const c_recoder = new CCapture({format:"webm"})
 
-let is_recoding=!1;
 
 
 
@@ -391,54 +385,7 @@ gl.deleteBuffer(this.ID);
 
 
 
-class Material{
-constructor(){
-this.Program=new Program(gl, shaderSource.simple.vertex, shaderSource.simple.fragment)
-this.drawMethod = gl.TRIANGLES;
 
-this.Ambient=[0.0, 0.0, 0.5, 1.0]
-this.Diffuse=[0.0, 1.0, 0.5, 1.0]
-this.Specular=[1.0, 0.0, 0.5, 1.0]
-this.Shininess=1.0;
-
-this.color=[1.0, 0.0, 0.0, 1.0]
-}
-
-#_update(dt=0){
-showError("hi form Materials class")
-
-}
-
-}
-
-class Geometry{
-constructor(){
-
-this.verticies=new Float32Array([
-  0.0,   0.5, 1.0, 0.0, 0.0, 1.0,
- -0.5,  -0.5, 0.0, 0.0, 1.0, 1.0,
-  0.5,  -0.5, 0.0, 1.0, 0.0, 1.0,
-
-]);
-
-this.verticies2=new Float32Array([
-  0.0,   0.5,
- -0.5,  -0.5,
-  0.5,  -0.5,
-
-]);
-
-
-this.indices=new Uint8Array([]);
-
-this.vbo=new VB(this.verticies)
-
-//showError(this.vbo)
-//this.ibo=new IB(this.indices)
-}
-
-
-}
 
 
 
@@ -551,6 +498,21 @@ this.Color = value;
 }
 
 
+class TextureLoader{
+constructor(){
+this.path="/storage/emulated/0/";
+}
+
+load(url){
+
+let img = new Image();
+img.src = this.path +url;
+let tex = new Texture(img);
+return tex;
+}
+
+}
+
 
 
 
@@ -562,29 +524,29 @@ const width=360, height=360;
 
 gl.canvas.width=width;
 gl.canvas.height=height;
-
+const clearColor = [0.3, 0.2, 0.4, 1.0];
 showError(gl)
-const _randerer = new Renderer(width, height);
 
 
 
 
-const shader1={
+
+
+const ray_marching_shader_source={
 vertex:`#version 300 es
 precision mediump float;
-layout (location=0) in vec4 aPos;
-layout (location=1) in vec2 aUv;
 
 
+uniform vec3 uPos;
 
-out vec2 vUv;
+
 
 void main(){
 
-vUv = aUv;
 
-gl_Position = aPos;
-gl_Position.w =   0.5;
+gl_Position = vec4(uPos.xy, 0.0, 1.0);
+gl_PointSize = uPos.z;
+
 
 }
 `,
@@ -595,132 +557,193 @@ precision mediump float;
 layout (location=0) out vec4 FragColor;
 
 
-uniform sampler2D uTex;
 
-uniform float uTime;
 uniform vec2 uRes;
+uniform float uTime;
+uniform vec4 uMouse;
 
 
-in vec2 vUv;
+
+
+vec3 palette(float t){
+vec3 a = vec3(0.5, 0.5, 0.5);
+vec3 b = vec3(0.5, 0.5, 0.5);
+vec3 c = vec3(1.0, 1.0, 1.0);
+vec3 d = vec3(0.263, 0.416, 0.557);
+
+return a + b * cos(6.28138*(c*t+d));
+
+}
+
+mat2 rot2D(float angle){
+float c = cos(angle);
+float s = sin(angle);
+return mat2(c, -s, s, c);
+}
+
+vec3 rot3D(vec3 p, vec3 axis, float angle){
+return mix(dot(axis, p) * axis, p, cos(angle)) + cross(axis, p) * sin(axis);
+}
+
+float sdSphere(vec3 p, float s){
+
+return length(p) - s;
+}
+
+float sdBox(vec3 p, vec3 b){
+vec3 q = abs(p) - b;
+return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
+}
+
+float sdOctahedron(vec3 p, float s){
+vec3 q = abs(p);
+return (p.x + p.y + p.z - s) * 0.57735027;
+}
+
+float opUnion(float d1, float d2){
+return min(d1, d2);
+}
+
+float opSubtraction(float d1, float d2){
+return max(-d1, d2);
+}
+
+float opIntersection(float d1, float d2){
+return max(d1, d2);
+}
+
+float smin(float a, float b, float k){
+float h = max(k-abs(a-b), 0.0)/k;
+return min(a, b) - h*h*h*k*(1.0/6.0);
+}
+
+
+float map(vec3 p){
+
+
+p.z += uTime * 0.2; // forward movement
+//p.x += uTime * 0.2; // forward movement
+
+// space repetition
+p.xy = (fract(p.xy) - 0.5);
+p.z = mod(p.z, 0.25) - 0.125;
+p = fract(p) - 0.5;
+
+
+float box = sdBox(p, vec3(0.05)); // cube sdf
+
+//float sphere = sdSphere(p - uTime, 0.02); // sphere sdf
+
+
+
+
+
+return box;
+}
 
 
 void main(){
 
-float angle = uTime * 0.25;
-vec2 uv = gl_FragCoord.xy / uRes.xy * 3.0 - 1.5;
-
-for (float i = 0.0;i < 32.0; i += 2.0){
+vec2 uv = (gl_FragCoord.xy * 2. - uRes.xy ) / uRes.y;
+vec2 m = (uMouse.xy * 2. - uRes.xy ) / uRes.y * 3.;
 
 
-uv = abs(uv);
-uv -= 0.5;
-uv *= 1.2;
-uv *= mat2(
-  cos(angle), -sin(angle),
-  sin(angle), cos(angle)
-) ;
 
+// initialization
+vec3 ray_origin = vec3(0., 0., -3.);
+//
+vec3 ray_direction = vec3(uv * 0.6, 0.91);//normalize(vec3(uv * 1.5, 1.5));
+
+vec3 col = vec3(0.); // final pixel color
+
+//
+float t = 0.;
+
+
+
+
+// vertical camera Rotation
+
+//ray_origin.yz *= rot2D(-m.y);
+//ray_origin.yz *= rot2D(-m.y);
+
+// horizontal camera Rotation
+
+//ray_origin.xz *= rot2D(-m.x);
+//ray_origin.xz *= rot2D(-m.x);
+
+
+
+if (uMouse.z < 0.) m = vec2(cos(uTime*0.2), sin(uTime*0.2));
+
+// ray marching
+int i;
+for(i=0; i < 80;i++){
+vec3 p = ray_origin + ray_direction * t; // Position along the ray
+
+p.xy *= rot2D(t*0.2 * m.x);
+p.y += sin(t * (m.y + 1.0) * 0.5) * 0.35;
+
+float d = map(p); // current distance to the scene
+
+t += d; // "march" the ray
+
+//col = vec3(i) / 80.;
+
+if (d < .001 || t > 100.) break;
 }
 
-vec4 fcolor= vec4( length(uv) * cos(uTime), length(uv * vec2(0.5, 0.1)), length(uv * vec2(0.2, 1.0) ), 1.0);
+// coloring
+col = palette(t * .04  + float(i)*0.005); // color based on distance
 
-//vec4 fcolor= vec4( vec3(length(uv)), 1.0);
+FragColor = vec4(col, 1.0);
 
-vec4 img = texture(uTex, vUv);
 
-//float s = uTime;
-
-FragColor = mix(img, fcolor, 0.9);
 
 }
 `,
 }
 
 
+const prog =  new Program( ray_marching_shader_source.vertex, ray_marching_shader_source.fragment)
 
-const prog =  new Program( shader1.vertex, shader1.fragment)
-
-
-let tex1 = new Texture(img1)
-
-const PositionVerticesData=new Float32Array([
-
-	// x y z 
-	-.5,  .5,
-	-.5, -.5,
-	 .5, -.5,
-	 .5,  .5,
+const mouse_coord={
+x:0, y:0, z:0, w:1
+};
 
 
-
-])
-
-const UVVerticesData=new Float32Array([
-
-	// uv
-
-	0, 1,
-	0, 0,
-	1, 0,
-	1, 1,
-
-
-
-])
-
-const indicesData=new Uint8Array([
-0,1,2,
-0,2,3,
-])
-
-
-
-let Vao1=new VA();
-let Vbo1=new VB(PositionVerticesData);
-let Vbo2=new VB(UVVerticesData);
-let Ibo1=new IB(indicesData);
-
-Vao1.Bind()
-Vao1.LA(Vbo1, 0, 2)
-Vao1.LA(Vbo2, 1, 2)
-Ibo1.Bind()
-
-
-
-
-let x=0, y=0;
 
 const update=(dt)=>{
 
-prog.Bind()
-Vao1.Bind()
-tex1.Bind()
+prog.Bind();
+
+
 prog.SetUniform1("uTime", dt)
-prog.SetUniform2("uRes", [width, height])
+prog.SetUniform2("uRes", [width, height]);
+prog.SetUniform3("uPos", [0, 0, width]);
 
-//prog.SetUniform2("uOffset", [x, y])
+prog.SetUniform4("uMouse", [mouse_coord.x, mouse_coord.y, mouse_coord.z, mouse_coord.w]);
 
 
-gl.drawElements(gl.TRIANGLES,  indicesData.length, gl.UNSIGNED_BYTE, 0)
-
+gl.drawArrays(gl.POINTS, 0, 1);
 
 }
 
 
-
-//gl.enable(gl.BELND);
-//gl.blendFunc(gl.BLEND_SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
 
 
 const animate=(dt)=>{
 
 // clearing canvas
-_randerer.Clear()
+
+
+gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+gl.clearColor(...clearColor);
+gl.clear(gl.COLOR_BUFFER_BIT );
 
 update(dt);
 
-c_recoder.capture(gl.canvas);
 
 }
 
@@ -750,22 +773,30 @@ loop()
 
 //showError(window)
 
+document.addEventListener("touchstart", (e)=>{
+if(!e.touches[0]) return;
+mouse_coord.x = e.touches[0].pageX;
+mouse_coord.y = e.touches[0].pageY;
+mouse_coord.z = 1;
+mouse_coord.w = 1;
+})
+
+document.addEventListener("touchmove", (e)=>{
+if(!e.touches[0]) return;
+mouse_coord.x = e.touches[0].pageX;
+mouse_coord.y = e.touches[0].pageY;
+mouse_coord.z = -1;
+})
+
+document.addEventListener("touchend", (e)=>{
+if(!e.touches[0]) return;
+//mouse_coord.x = e.touches[0].pageX;
+//mouse_coord.y = e.touches[0].pageY;
+mouse_coord.z = 1;
+mouse_coord.w = -1;
+})
 
 
-const start_recoding=()=>{
-is_recoding = true;
-c_recoder.start();
-}
-
-const end_recoding=()=>{
-is_recoding = false;
-c_recoder.stop()
-c_recoder.save()
-}
-
-
-btn_start_recoding.addEventListener("click", start_recoding)
-btn_end_recoding.addEventListener("click", end_recoding)
 
 
 }

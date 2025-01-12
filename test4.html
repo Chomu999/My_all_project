@@ -1,418 +1,824 @@
-<!--
-[attr],
-[attr=value],
-[attr*=value],
-[attr|=value],
-[attr!=value],
-[attr~=value],
-[attr=value][attr2=value],
--->
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="author" content="billbyte"/>
+<title>webgl app testing 4</title>
 
-<!--
-p.id
-p, h2, pre
-p.class
-
-p + a
-h1 ~ p
-
-p  a
-pre p  a
-button > a
-button > p > a
-
-
--->
-
-
-<div>
-
-<style type="text/css" media="screen">
-
-.two-column {
-background: #FF0069;
-columns: 2 100px ;
-column-rule-style: solid;
-column-width:40px;
-column-gap:10px;
-column-rule-width: 30px;
-column-rule-color: saddlebrown;
-}
-
-.three-column {
-background: #BA00FF;
-columns: 3 80px;
-column-rule-style: dashed;
-column-width:20px;
-column-gap:60px;
-column-rule-width: thin;
-column-rule-color: lime;
-}
-
-p{
-color:#363636;
-}
-
-</style>
-
-<body>
-
-<div class="three-column">
-<p> a </p>
-
-<p>b </p>
-<p> c</p>
-
-</div>
-
-<div class="two-column">
-<p>a</p>
-<p>b</p>
-
-</div>
-
-</body>
-</div>
-
-<!-- <div>
-
-<style type="text/css" media="screen">
-.two-column {
-background: #FF0069;
-columns: 2 100px ;
-column-rule-style: solid;
-column-width:40px;
-column-gap:10px;
-column-rule-width: 30px;
-column-rule-color: saddlebrown;
-}
-
-.three-column {
-background: #BA00FF;
-columns: 3 80px;
-column-rule-style: dashed;
-column-width:20px;
-column-gap:60px;
-column-rule-width: thin;
-column-rule-color: lime;
-}
-
-p{
-color:#363636;
-}
-
-</style>
-
-<body>
-
-<div class="three-column">
-<p> a </p>
-
-<p>b </p>
-<p> c</p>
-
-</div>
-
-<div class="two-column">
-<p>a</p>
-<p>b</p>
-
-</div>
-
-</body>
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="screen">
-
-
-</style>
-
-<body>
-<p style="layout-grid-type: strict; layout-grid-line: 55px;">
- A short text sample would likely be in Chinese, not English.</p>
-
-<p style="layout-grid-mode: none; layout-grid-line: 100px;">
- A short text sample<br>
- with layout-grid-mode<br>
- set to a value of none<br>
- to turn off the grid.</p>
-
-</body>
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="screen">
-
-
-p:first-child { color: red;}
-
-textarea[rows]{
-scrollbar-track-color:blue;
-scrollbar-shadow-color: red;
-scrollbar-highlight-color: red;
-}
-.boxs{
-width:200px; height:200px;
-background:#8700FF;
-}
-
-.box1{
-opacity:0.8;
-}
-
-.box2{
-opacity:0.0;
-}
-
-.box3{
-opacity:1;
-}
-
-.box4{
-opacity:0.7;
-filter:alpha(opacity=70);
-}
-
-</style>
-
-<body>
-
-<div class="boxs box1"></div>
-<div class="boxs box2"></div>
-<div class="boxs box3"></div>
-<div class="boxs box4"></div>
-
-</body>
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="screen">
-
-
-p:first-child { color: red;}
-
-textarea[rows]{
-scrollbar-track-color:blue;
-scrollbar-shadow-color: red;
-scrollbar-highlight-color: red;
-}
-
-</style>
-
-<body>
-
-<p style="overflow-y: scroll; height: 25px; width: 50px;
- background-color: #00f;">
-ABC<br>
-DEF<br>
-GHI<br>
-JKL<br>
-MNO<br>
-PQR<br>
-STU<br>
-VWXYZ </p>
-
-<p style="overflow-x: scroll; width: 40px; background-color:#0ff;">
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-</p>
-
-
-<p style="overflow: auto;
- overflow-x:-webkit-marquee;
- display:-wap-marquee;
- overflow-style: marquee-line;
- width: 100px; background:#0079FF;">
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-</p>
-
-</body>
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="screen">
-
-
-p:first-child { color: red;}
-
-textarea[rows]{
-scrollbar-track-color:blue;
-scrollbar-shadow-color: red;
-scrollbar-highlight-color: red;
-}
-
-</style>
-
-<body>
-<form action="#" method="get">
-<div>
-<textarea rows="3" cols="2"></textarea>
-</div>
-</form>
-
-</body>
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="screen">
-
-@page {size: 8.5in 11in;}
-
-p:first-child { color: red;}
-
-</style>
-
-<body>
-
-<p>I should be red because I am the first child in the body.</p>
-<p>I should not be red because I am the second child in the body.</p>
-<div>
- <p>I should be red because I am the first child of div.</p>
- <p>Second child of div, thus not red.</p>
-</div>
-
-
-</body>
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="screen">
- .annoy:hover {border-style: dashed; background-color: yellow;}
- input[type=text]:hover {background-color: yellow; }
- input[type=text]:focus {background-color: #FFA500;}
-</style>
-
-
-<p class="annoy">Roll over me.</p>
-<p>Now <span class="annoy">roll over</span> that bit of text.</p>
-<form action="#">
- <div><input type="text" size="40" value="Hover and then click into this 
-field"></div>
-</form>
-
-
-</div> -->
-
-<!-- <div>
-
-<style type="text/css" media="all">
-a:link {color: blue; text-decoration: none;}
-a:active {color: red; background-color: #FFC;}
-a:visited {color: purple; text-decoration: none;}
-a:hover {color: red; text-decoration: underline;}
-a:focus {border-style: dashed; border-width: 1px; 
- background-color: #FFA500;}
-</style>
-
-<a href="http://www.htmlref.com">HTML: The Complete Reference</a>
-
-
-</div> -->
-
-<!-- <div>
-
-<style type="text/css">
- #select1::selection {background-color: red;}
- #select1::-moz-selection {background-color: red;}
- #select2::selection {color: green;}
- #select2::-moz-selection {color: green;} 
-</style>
-
-<p>Select <span id="select1">this text</span>. Now select <span 
-id="select2">this text</span>.</p>
-
-</div> -->
-
-<!-- <div>
-<style type="text/css" media="all">
- p#intro:first-letter {font-size: 5em; font-weight: bold;
- margin-right: .1em;
- color: #999;}
- p#intro:first-line {font-size: 1.5em; font-weight: bold;}
-</style>
-
-<p id="intro">It was the best of times, it was the worst of times, it was 
-the age of wisdom, it was the age of foolishness, it was the epoch of 
-belief, it was the epoch of incredulity, it was the season of Light, it was 
-the season of Darkness, it was the spring of hope, it was the winter of 
-despair, we had everything before us, we had nothing before us, we were all 
-going direct to heaven, we were all going direct the other way - in short, 
-the period was so far like the present period, that some of its noisiest 
-authorities insisted on its being received, for good or for evil, in the 
-superlative degree of comparison only.</p>
-
-
-</div> -->
-
-<!-- <div>
 <style>
 
 
-p [title*="found"] {background-color: red;}
+
+*{
+margin: 0;
+padding: 0;
+box-sizing:border-box;
+/* border: 0.1px solid red; */
+}
+
+
+
+html{
+font-size: 10px;
+}
+
+a{
+text-decoration: none;
+}
+
+li{
+list-style:none;
+}
+
+
+
+
+body{
+/* display:grid; */
+/* grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); */
+/* grid-template-rows: repeat(2, 1fr); */
+/* place-items:center; */
+/* gap: 1rem; */
+background: #3e3e3e;
+
+}
+
+main{
+display: grid;
+/* grid-template-columns: repeat(auto-fil, minmax(30rem, 1fr)); */
+grid-template-rows: repeat(auto-fil, minmax(1fr, 30rem));
+}
+
+canvas{
+margin: auto;
+background:#FF986E;
+}
+
+.control_box{
+background: brown;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.control_box > button{
+padding: 2rem;
+font-size:2rem;
+text-transform: capitalize;
+background: #009AFF;
+border: 0;
+border-radius: 8rem;
+}
+
+.error_box{
+margin: 2rem 0;
+background:transparent;
+overflow:hidden auto;
+}
+
+.title{
+color:#222A3B;
+font-size: 3rem;
+display:block;
+text-align: center;
+text-transform: capitalize;
+background: linear-gradient(45deg,red, blue);
+text-decoration: underline;
+}
+
+.error_box  p{
+margin:0.2rem 1rem;
+padding: 1rem ;
+
+background: #0009;
+color: #FF374E;
+border-radius: 1rem;
+}
+
+
+.hidden{
+display: none;
+}
+
 </style>
 
-<p title="The match is found in here">This should be red.</p>
+<!-- <script src="/storage/emulated/0/g_js_libs/CCapture.all.min.js"></script> -->
+<script src="/storage/emulated/0/g_js_libs/gl-matrix.js"></script>
 
-<p title="No match can be seen here">This shouldn't be red.</p>
+</head>
+<body>
 
-<p class="group4" title="*foundinside*">This should be red.</p>
+<main>
 
-<p class="group4" title="*Foundinside*">This shouldn't be red.</p>
-
-
-</div> -->
-
-<!-- <div>
-<style>
-
-p.group4[title$="match end"] {background-color: red;}
-
-</style>
-<p class="group4" title="This should match end">This should be red.</p>
-<p class="group4" title="This won't match end!">This shouldn't be red.</p>
-</div> -->
-
-<!-- <div>
-<style>
-
-p [title ^="Start match"] {background-color: red;}
-
-</style>
-<p title="Start match">This should be red.</p>
-<p title="No Start Match">This should not be red.</p>
-</div> -->
-
-<!-- <div>
-<style>
-p[lang|="en"] {color: red;}
-
-</style>
-
-<p lang="en">This is English and red.</p>
-<p lang="en-uk">This is British English and red.</p>
-<p>Not red no lang specified.</p>
-<p lang="fr">C'est Francais. (Not red)</p>
+<canvas id="canvas"></canvas>
 
 
-</div> -->
-
-<!-- <div>
-<style>
-p[title~="Larry"] {
-background: red;
-font-style: italic;}
-
-</style>
 
 
-<p title="Larry Curly and Moe">This is italic.</p>
-<p title="Larry">This is italic.</p>
-<p title="Larry-The-Stooge">This is not italic.</p>
+<div class="error_box">
+<span class="title">error and warning</span>
+<pre></pre>
+</div>
 
-</div> -->
+</main>
+
+<div class="hidden">
+<img src="/storage/emulated/0/Download/images (7).jpeg" id="img1" />
+<img src="/storage/emulated/0/Download/Zelda2.png" id="img2" />
+<img src="/storage/emulated/0/Download/images (9).jpeg" id="img3" />
+<img src="/storage/emulated/0/Download/images (10).jpeg" id="img4" />
+</div>
+
+<script>
+
+
+
+const {PI, cos, sin, tan, abs} = Math;
+
+
+
+const showError=(msg)=>{
+console.log(msg)
+const errorContainer=document.querySelector(".error_box > pre")
+if(!errorContainer) return -1;
+errorContainer.innerHTML+=`<p>${msg}</p>`;
+}
+
+const showGlError =(ii=0)=>{
+for (let i in gl) if (gl[i] == ii) showError(i)
+}
+
+
+
+const canvas=document.querySelector("canvas");
+
+const gl=canvas.getContext("webgl2");
+
+
+
+
+
+class Rand{
+
+static Float(min=0, max=1){
+return Math.random() * (max - min) + min;
+}
+
+static Int(min=1, max=2){
+return Math.floor(Rand.Float(min, max));
+}
+
+static Choice(...args){
+return args[Rand.Int(0, args.length)];
+}
+
+
+}
+
+
+
+
+
+
+
+const makeProgram=(gl, vss, fss)=>{
+const vs=gl.createShader(gl.VERTEX_SHADER)
+gl.shaderSource(vs, vss)
+gl.compileShader(vs)
+if(!gl.getShaderParameter(vs, gl.COMPILE_STATUS)){
+showError(`vertex error ${gl.getShaderInfoLog(vs)}
+${gl.getShaderSource(vs)}
+`)
+}
+
+const fs=gl.createShader(gl.FRAGMENT_SHADER)
+gl.shaderSource(fs, fss)
+gl.compileShader(fs)
+if(!gl.getShaderParameter(fs, gl.COMPILE_STATUS)){
+showError(`fragment error ${gl.getShaderInfoLog(fs)}
+${gl.getShaderSource(fs)}
+`)
+}
+
+
+const prog=gl.createProgram();
+gl.attachShader(prog, vs);
+gl.attachShader(prog, fs);
+
+gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
+showError(`${gl.getProgramInfoLog(prog)}`)
+}
+
+gl.useProgram(prog);
+
+gl.validateProgram(prog);
+if(!gl.getProgramParameter(prog, gl.VALIDATE_STATUS)){
+showError(`${gl.getProgramInfoLog(prog)}`)
+}
+
+return prog;
+}
+
+
+class Program{
+constructor(vss, fss){
+this.ID=makeProgram(gl, vss, fss);
+
+this.ID.loc={
+u:{},
+a:{}
+};
+
+}
+
+Bind(){
+gl.useProgram(this.ID);
+}
+
+Unbind(){
+gl.useProgram(null);
+}
+
+Delete(){
+gl.deleteProgram(this.ID);
+}
+
+SetUniform1(name, value){
+gl.uniform1f(Program.GetUniformLocation(this.ID, this.ID.loc.u, name), value);
+}
+
+SetUniform2(name, value){
+gl.uniform2fv(Program.GetUniformLocation(this.ID, this.ID.loc.u, name), value);
+}
+
+SetUniform3(name, value){
+gl.uniform3fv(Program.GetUniformLocation(this.ID, this.ID.loc.u, name), value);
+}
+
+SetUniform4(name, value){
+gl.uniform4fv(Program.GetUniformLocation(this.ID, this.ID.loc.u, name), value);
+}
+
+SetUniformMat4(name, value){
+gl.uniformMatrix4fv(Program.GetUniformLocation(this.ID, this.ID.loc.u, name), gl.FLOAT, value)
+
+}
+
+static GetUniformLocation(prog, u, name){
+
+let result = !u[name] ? gl.getUniformLocation(prog, name): u[name];
+u[name] = result;
+return result;
+
+}
+
+}
+
+
+class Texture{
+constructor(imgData){
+this.ID= gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, this.ID);
+gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, !0)
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgData)
+
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+gl.bindTexture(gl.TEXTURE_2D, null)
+
+}
+
+Bind(){
+gl.bindTexture(gl.TEXTURE_2D, this.ID);
+}
+
+Unbind(){
+gl.bindTexture(gl.TEXTURE_2D, null);
+}
+
+Delete(){
+gl.deleteTexture(this.ID);
+}
+
+
+}
+
+
+
+class VA{
+constructor(){
+this.ID=gl.createVertexArray()
+}
+
+Bind(){
+gl.bindVertexArray(this.ID);
+}
+
+Unbind(){
+gl.bindVertexArray(null);
+}
+
+Delete(){
+gl.deleteVertexArray(this.ID);
+}
+
+LA(vbo, layoutLocation=0, numberOfComponents=3, type=gl.FLOAT, normalize=!1, stride=0, offset=0){
+if (vbo instanceof VB) vbo.Bind()
+gl.enableVertexAttribArray(layoutLocation);
+gl.vertexAttribPointer(layoutLocation, numberOfComponents, type, normalize, stride, offset);
+
+}
+
+}
+
+
+class VB{
+constructor(Data){
+this.ID=gl.createBuffer()
+gl.bindBuffer(gl.ARRAY_BUFFER, this.ID);
+gl.bufferData(gl.ARRAY_BUFFER, Data, gl.STATIC_DRAW);
+
+}
+
+Bind(){
+gl.bindBuffer(gl.ARRAY_BUFFER, this.ID);
+}
+
+Unbind(){
+gl.bindBuffer(gl.ARRAY_BUFFER, null);
+}
+
+Delete(){
+gl.deleteBuffer(this.ID);
+}
+
+
+}
+
+
+class IB{
+constructor(Data){
+this.ID=gl.createBuffer()
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ID);
+gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Data, gl.STATIC_DRAW);
+
+}
+
+Bind(){
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ID);
+}
+
+Unbind(){
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+}
+
+Delete(){
+gl.deleteBuffer(this.ID);
+}
+
+
+}
+
+
+
+
+class Material{
+constructor(){
+this.Program=new Program(gl, shaderSource.simple.vertex, shaderSource.simple.fragment)
+this.drawMethod = gl.TRIANGLES;
+
+this.Ambient=[0.0, 0.0, 0.5, 1.0]
+this.Diffuse=[0.0, 1.0, 0.5, 1.0]
+this.Specular=[1.0, 0.0, 0.5, 1.0]
+this.Shininess=1.0;
+
+this.color=[1.0, 0.0, 0.0, 1.0]
+}
+
+#_update(dt=0){
+showError("hi form Materials class")
+
+}
+
+}
+
+class Geometry{
+constructor(){
+
+this.verticies=new Float32Array([
+  0.0,   0.5, 1.0, 0.0, 0.0, 1.0,
+ -0.5,  -0.5, 0.0, 0.0, 1.0, 1.0,
+  0.5,  -0.5, 0.0, 1.0, 0.0, 1.0,
+
+]);
+
+this.verticies2=new Float32Array([
+  0.0,   0.5,
+ -0.5,  -0.5,
+  0.5,  -0.5,
+
+]);
+
+
+this.indices=new Uint8Array([]);
+
+this.vbo=new VB(this.verticies)
+
+//showError(this.vbo)
+//this.ibo=new IB(this.indices)
+}
+
+
+}
+
+
+
+
+class Mesh{
+constructor(material, geometry){
+this.material = material;
+this.geometry = geometry;
+
+this.modelMat=mat4.create()
+
+this.Position= [0, -0.5]
+
+this.Scale= [1, 1]
+this.Rotation= [0, 0, 0]
+this.Vao=new VA()
+
+this.#Bind()
+
+}
+
+#Bind(){
+
+this.Vao.Bind()
+this.geometry.vbo.Bind()
+
+
+this.Vao.LA(this.geometry.vbo, 0, 3, gl.FLOAT, false, 8 * 4, 0 * 4)
+this.Vao.LA(null, 1, 2, gl.FLOAT, false, 8 * 4, 3 * 4)
+this.Vao.LA(null, 1, 3, gl.FLOAT, false, 8 * 4, 5 * 4)
+//Ebo1.Bind()
+
+
+}
+
+
+_render(){
+
+this.material.Program.Bind();
+this.Vao.Bind()
+
+this.#_update(1)
+this.material.Program.SetUniform2("uOffset", this.Position);
+
+gl.drawArrays(this.material.drawMethod, 0, 3)
+
+//gl.drawElements(this.material.drawMethod, this.geometry.indices.length, gl.UNSIGNED_BYTE, 0)
+//showError("drawin")
+
+}
+
+#_update(dt=0){
+
+showError("hi form mesh class")
+}
+
+
+}
+
+
+class Scene{
+constructor(){
+this.childrens=[]
+
+}
+
+add_child(...args){
+this.childrens.push(...args)
+}
+
+_render(){
+
+
+this.childrens.forEach((child)=>{
+child._render()
+})
+
+}
+
+
+}
+
+
+class Renderer{
+constructor(width, height){
+this.width=width;
+this.height=height;
+this.Color=[0.9, 0.9, 0.9, 1.0];
+}
+
+Clear(){
+
+gl.viewport(0, 0, this.width, this.height);
+gl.clearColor(...this.Color);
+gl.clear(gl.COLOR_BUFFER_BIT );
+
+}
+
+render(scene){
+
+
+scene._render()
+
+}
+
+set color(value){
+this.Color = value;
+}
+
+}
+
+
+class TextureLoader{
+constructor(){
+this.path="/storage/emulated/0/";
+}
+
+load(url){
+
+let img = new Image();
+img.src = this.path +url;
+let tex = new Texture(img);
+return tex;
+}
+
+}
+
+
+
+
+
+
+const INIT=()=>{
+
+const width=360, height=360;
+
+gl.canvas.width=width;
+gl.canvas.height=height;
+
+showError(gl)
+
+const _randerer = new Renderer(width, height);
+
+
+
+
+const shader1={
+vertex:`#version 300 es
+precision mediump float;
+layout (location=0) in vec4 aPos;
+layout (location=1) in vec2 aUv;
+
+
+
+out vec2 vUv;
+
+
+
+
+
+void main(){
+
+vUv = aUv * 1.0;
+
+gl_Position = aPos;
+
+}
+`,
+
+
+fragment:`#version 300 es
+precision mediump float;
+layout (location=0) out vec4 FragColor;
+
+
+uniform sampler2D uTex;
+
+uniform float uTime;
+uniform vec2 uRes;
+
+
+in vec2 vUv;
+
+
+void main(){
+
+
+float angle = uTime * 0.025;
+vec2 uv = gl_FragCoord.xy / uRes.xy * 2.0 - 1.0;
+
+for (float i = 0.0;i < 32.0; i += 1.0){
+
+
+uv = abs(uv);
+uv -= 0.5;
+uv *= 1.09;
+uv *= mat2(
+  cos(angle), -sin(angle),
+  sin(angle), cos(angle)
+);
+
+}
+
+vec4 finalColor = vec4( length(uv) * cos(uTime), length(uv * vec2(0.5, 0.1)), length(uv * vec2(0.2, 1.0) ), 1.0);
+
+// vec4 finalColor += vec4( vec3(length(uv)), 1.0);
+
+vec4 img = texture(uTex, vUv);
+
+float s = uTime;
+
+s = abs(s);
+
+
+
+FragColor =mix(img, finalColor, s);
+
+
+
+}
+`,
+}
+
+
+
+const prog =  new Program( shader1.vertex, shader1.fragment)
+
+const myTextureLoader = new TextureLoader();
+
+
+const tex1 = myTextureLoader.load("Download/images (7).jpeg");
+
+
+const PositionVerticesData=new Float32Array([
+
+	// x y z
+	-1,  1,
+	-1, -1,
+	 1, -1,
+	 1,  1,
+
+
+
+])
+
+const UVVerticesData=new Float32Array([
+
+	// uv
+	0, 1,
+	0, 0,
+	1, 0,
+	1, 1,
+
+
+
+])
+
+const NormalVerticesData=new Float32Array([
+	// normals
+	 -1.0,  1.0, -1.0,
+	  1.0, -1.0, -1.0,
+	  1.0,  1.0,  1.0,
+	  1.0,  1.0,  1.0,
+
+
+
+])
+
+const indicesData=new Uint8Array([
+0,1,2,
+0,2,3,
+])
+
+
+
+const Vao1=new VA();
+const Vbo1=new VB(PositionVerticesData);
+const Vbo2=new VB(UVVerticesData);
+const Vbo3=new VB(NormalVerticesData);
+const Ibo1=new IB(indicesData);
+
+Vao1.Bind()
+Vao1.LA(Vbo1, 0, 2)
+Vao1.LA(Vbo2, 1, 2)
+Vao1.LA(Vbo3, 2, 3)
+Ibo1.Bind()
+
+
+
+
+let x=0, y=0;
+let LightDirValue = [-5, 5, 5];
+let LightColorValue = [0.0, 0.5, 0.0, 1.0];
+
+const update=(dt)=>{
+
+prog.Bind()
+Vao1.Bind()
+tex1.Bind()
+prog.SetUniform1("uTime", dt)
+prog.SetUniform2("uRes", [width, height])
+
+
+
+
+//prog.SetUniform2("uOffset", [x, y])
+
+
+gl.drawElements(gl.TRIANGLES,  indicesData.length, gl.UNSIGNED_BYTE, 0)
+
+
+}
+
+
+
+//gl.enable(gl.BELND);
+//gl.blendFunc(gl.BLEND_SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
+
+
+const animate=(dt)=>{
+
+// clearing canvas
+_randerer.Clear()
+
+update(dt);
+
+
+}
+
+
+
+
+
+
+
+// performance.now();
+
+const loop=(ts=0)=>{
+
+let dt = ts * 0.001 ?? 0.5;
+
+
+animate(dt);
+
+requestAnimationFrame(loop)
+
+}
+
+loop()
+
+
+
+
+//showError(window)
+
+
+
+
+}
+
+
+
+
+
+
+
+window.addEventListener("load", ()=>{
+
+try{
+
+
+INIT();
+
+
+showError("js is awesome".toUpperCase());
+
+}catch(e){
+showError(e);
+}
+
+});
+
+
+
+</script>
+
+</body>
+</html>
